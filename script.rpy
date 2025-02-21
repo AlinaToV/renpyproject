@@ -4,12 +4,14 @@ define p5 = Character('Палка 5', color="#cfca83ff")
 define p6 = Character('Палка 6', color="#252792ff")
 define gui.dialogue_text_outlines = [ (1, "#00000080", 4, 4) ]
 define i = Character('Вы', color="#d11d1dff")
-define v = Character('Голоса палок', color="#600606ff")
+define v = Character('Голоса', color="#600606ff")
 define s = Character('Ведущий', color="#33007bff")
 define j = Character('Jorji', color="#130052ff")
 define proryanytavtomat = None #вы приняли предложение на концовку
 $ renpy.music.set_volume(0.2)
 $ renpy.sound.set_volume(0.2) 
+default invent = False
+default last_item = False
 define audio.budd = "music/budd.mp3"
 $ music = "audio/splash.mp3"
 $ music = "audio/treaty.mp3"
@@ -121,14 +123,13 @@ screen first_frame():
                 align (0.5, 0.5)   
        
 label start:
-
-    scene dwor
-    $ renpy.notify("Начало")
-    scene black
-    centered"Помогите пожалуйста."
-    "Протянуть руку в неизвестность?... Пучина затягивает вас."
-    scene hand
-    i "..."
+scene dwor
+$ renpy.notify("Начало")
+scene black
+"Помогите пожалуйста."
+"Протянуть руку в неизвестность?... Пучина затягивает вас."
+scene hand
+i "..."
 menu: 
     "Согласиться?"
     
@@ -173,15 +174,17 @@ if is_lost:
 else:
     centered"Непонятная сила будто выключает будильник за вас. В комнате отдает запахом дождя."
     stop music fadeout 2.0
-window hide 
+window hide
+
+$ items.extend([("lucky_coin")])
+show screen inventory
 play music "audio/treaty.mp3" fadein 2.0
 screen black:
     text "ПРОВЕРКА СВЯЗИИИИИИИИИИИИИИИИИИИИИИИИИИИИИИИИИИИИИИИИИИИ" xpos 960 ypos 540 xanchor 0.5 yanchor 0.5 #не рабит перекрывается мб
     textbutton "Инвентарь" action ShowMenu("inventory_screen") xpos 1800 ypos 50 xanchor 1 yanchor 0
-show screen inventory_screen
 scene bear
+label inc:
 "Ваш взгляд падает под стол, вы видите там пиво"
-hide screen inventory_screen
 menu:
     "Выпить его?":
         $ gift = "Пиво"
@@ -211,7 +214,6 @@ if gift == "Кола":
 if gift == "Вода":
     i "Я как.. а да не суть"
 
-
 label mark_3:
     scene komn
     m"<Она> жила не в лучших условиях, у неё все равно не было никакого лучика но..."
@@ -220,7 +222,9 @@ menu:
     i "Аку? Что за аку"
     "Айкью":
         $ iq = True #обьяв перем
+
     "Аку":
+ 
         $ iq = False
 
 if iq:
@@ -398,10 +402,10 @@ else:
     $ kyr = True
     #пичка
     centered"Никотиновозависимая палка"
-label i:
-    centered"На двери замок, кто это вообще придумал.А.. на нём написано Вова"
+
 label locked:
     window hide
+    centered"На двери замок, кто это вообще придумал.А.. на нём написано Вова"
     "Это плохо, мне всегда казалось что вова культист"
     $ entered_password = renpy.input("Введите пароль из трёх цифр")
     window show
@@ -730,19 +734,25 @@ else:
     centered"Вы продолжаете убегать от ответсвенности"
     jump vozvr
 label perk:
+    "Сначала нужно контролировать эмоции"
     $ konf = False
+    scene black
+    $ max_time = 60
+    $ ww, hh = 4, 4
+    call brainhack from _call_brainhack
+    return
+label nex:
     e"Эй слушайте вы палки!"
     "?- хи-хи"
     e"Так, похоже прийдется всё вам объяснять"
     "???- Да что там объяснять"
     e"Замолчите и не перебивайте"
-    e"Изначально я лишь пришла сюда для того чтобы получить свою награду и подошла выпить и расслабиться"
     e" А вы палки-алкоголички решили что достать левую палку,решив, что это нормально"
-    e"В любом случае пропаганда алкоголя это не хорошо"
+    e"Пропаганда алкоголя это не хорошо"
     "Палки переглянулись"
     e"Вашу жизнь сгубит ваше же поведение, вы еще скажите что курите, знаете что с вашими легкими и печенью"
     "Палки сомнительно переглянулись, одна из них покапалась в кармане"
-    m"Почувствовав недоверие палка решила пойти с козырей"
+    m"Может пойти с козырей"
     e"Да у вас же никогда не будет красивых и зеленых листков!!!"
     "???- Боже только не мои листики..."
     "?? - Да мы всё поняли прости - прости нас мы больше не будем"
@@ -814,7 +824,7 @@ if inf:
     call screen custom_window("pism")
     $ renpy.notify("Письмо Максима")
 else:
-    jump orig
+    jump vozvr
 label pism:
     scene kor
     window show
@@ -829,6 +839,7 @@ label pism2:
     e"Ого, помоему он на 500 рублей в минусе"
     e"Видимо бубен и правда хорош"
     e"Жаль что некий <Денис> не купил"
+    jump vozvr
 label orig:
     play music "audio/charm.mp3" fadein 2.0
     scene escape
@@ -922,7 +933,7 @@ label godend:
         m"палочка ложится на спину и начинает стрелять из автомата ровно в воздух в надежде прострелить звезды и сбить их."
         label snip:
         m"ведь палочка не глупая, палочка слишком умная"
-        m"дело в том что у нее есть заклятый враг. она зовет его <дитя Цеcта>"
+        m"дело в том что у нее есть заклятый враг. она зовет его <дитя креcта>"
         m"этот враг знает ответ на вопрос о том.. как стать деревом.Этот враг знает ответ на вопрос о том.."
         m"как стать деревом."
         e"Да когда ж я стану деревом"

@@ -1,51 +1,26 @@
-init python:
-    import time
-    start_time = time.time()
-    inventory = {
-        "timer": 1, 
-        "lucky_coin": 1, 
-    }
+screen inventory:
+    zorder 111
+    default tt = Tooltip(" ")
+    frame:
+        xalign 1.0
+        background Solid("#0000")
+        xmaximum 130
+        ymaximum 450
+        xfill True
+        vbox:
+            imagebutton auto "inventory/bag_%s.png" action SetVariable("invent",not invent)
+            if invent:
+                text tt.value
+                hbox:
+                    viewport id "box":
+                        yinitial 9999
+                        xmaximum 0.9
+                        mousewheel True
+                        draggable True
+                        vbox:
 
-    def get_playtime():
-        elapsed_time = time.time() - start_time  
-        hours = int(elapsed_time // 3600) 
-        minutes = int((elapsed_time % 3600) // 60) 
-        seconds = int(elapsed_time % 60) 
-        return f"{hours:02}:{minutes:02}:{seconds:02}"
-    can_give_coin = False  # Активация для монетки НЕ ЗАБЫТЬ
-    def give_lucky_coin():
-        global inventory
-        if inventory.get("lucky_coin", 0) > 0:
-            inventory["lucky_coin"] -= 1
-            return True
-        return False
-
-screen inventory_screen:
-    tag menu
-    window:
-        style "menu_window"
-        text "Инвентарь"
-        
-    vbox:
-        text "Время в игре: [get_playtime()]" 
-
-        if inventory.get("timer", 0) > 0:
-            hbox:
-                image "timer.png"  
-                text "Таймер активен."
-
-        if inventory.get("lucky_coin", 0) > 0:
-            hbox:
-                image "lucky_coin.png" 
-                text "Монетка удачи."
-            if can_give_coin:
-                textbutton "Отдать монетку удачи" action [Function(give_lucky_coin), Jump("coin_given")]
-            else:
-                text "Монетку нельзя отдать пока что."
-
-    timer 1.0 action [Hide("inventory_screen"), Show("inventory_screen")]
-
-label coin_given:
-    $ can_give_coin = False
-    "Монетка удачи была отдана."
-    return
+                            for i in range(0,len(items)):
+                                imagebutton:
+                                    idle Image(GetFN(i))
+                                    hover Image(GetFN(i))
+                                    hovered tt.action(GetHint(i))
