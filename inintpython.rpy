@@ -1,29 +1,40 @@
-init -2 python:
-    items = []
+
+init python:
+
+    items = [("item1"), ("item2"),("item3")]
     last_item = None
 
     def SelectitemF(index):
+        global last_item
         if (index >= 0) and (index < len(items)):
-            last_item = items.pop(index)
-            renpy.restart_interaction()
+            last_item = items.pop(index)  
+            
+
             if last_item[0] == "lucky_coin":
                 renpy.print("Пока нельзя отдать")
-            if last_item[0] == "timer":
-                renpy.print("timeofgame")#подвезти потом таймер
-            Selectitem = renpy.curry(SelectitemF)
+            elif last_item[0] == "timer":
+                renpy.print("timeofgame")  
+            elif last_item[0] == "tesb":
+                renpy.print("гг")
 
+ 
     def GetFN(index=0):
-        global items
         if (index >= 0) and (index < len(items)):
-            fn, nh = items[index]
-            return "inventory/"+ fn + ".png"
-        else:
+            item = items[index]
+            if len(item) == 2:  
+                fn, nh = item 
+                return "inventory" + fn + ".png"  
+            else:
+                return ""  
             return ""
-    
-    def GetHint(index = 0):
-        global items
+
+    def GetHint(index=0):
         if (index >= 0) and (index < len(items)):
-            fn,nh = items[index]
-            return nh
+            item = items[index] 
+            if len(item) == 2:  
+                fn, nh = item  
+                return nh 
+            else:
+                return "" 
         else:
             return ""

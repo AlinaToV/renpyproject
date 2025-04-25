@@ -316,8 +316,6 @@ if pyt == "переулок":
     hide gg2
     jump park
 label sbor:
-hide gg
-hide gg2
     i"Слышала люди называют это место кодовым словом"
     i"..."
     i"Сортир"
