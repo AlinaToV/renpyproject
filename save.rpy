@@ -3,6 +3,8 @@ scrren_esc_menu():
 tag menu
 modal true 
 zorder 100
+#темнее фон
+    add Solid("#0008") as overlay
 #можно подогнать анимки
   frame at fade_in:
         xalign 0.5
@@ -21,3 +23,7 @@ zorder 100
             textbutton "Настройки" action ShowMenu("preferences")
             textbutton "Выйти в главное меню" action MainMenu()
             textbutton "Выйти из игры" action Quit(confirm=True)
+#анимация
+transform fade_in:
+    alpha 0.0
+    linear 0.3 alpha 1.0
