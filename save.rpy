@@ -1,12 +1,11 @@
-#менюшка для сейвов
-scrren_esc_menu():
-tag menu
-modal true 
-zorder 100
-#темнее фон
+screen esc_menu():
+    tag menu
+    modal True
+    zorder 100
+
     add Solid("#0008") as overlay
-#можно подогнать анимки
-  frame at fade_in:
+
+    frame at fade_in:
         xalign 0.5
         yalign 0.5
         padding 40
@@ -17,13 +16,13 @@ zorder 100
             style_prefix "esc"
 
             textbutton "Продолжить" action Return()
-            textbutton "Сохранить игру" action ShowMenu("save")
-            textbutton "Загрузить игру" action ShowMenu("load")
-            textbutton "Загрузить автосейв" action FileLoad("auto-1")
-            textbutton "Настройки" action ShowMenu("preferences")
-            textbutton "Выйти в главное меню" action MainMenu()
+            textbutton "Сохранить игру" action [Hide("esc_menu"), ShowMenu("save")]
+            textbutton "Загрузить игру" action [Hide("esc_menu"), ShowMenu("load")]
+            textbutton "Загрузить автосейв" action [Hide("esc_menu"), FileLoad(1)]
+            textbutton "Настройки" action [Hide("esc_menu"), ShowMenu("preferences")]
+            textbutton "Выйти в главное меню" action [Hide("esc_menu"), MainMenu()]
             textbutton "Выйти из игры" action Quit(confirm=True)
-#анимация
+
 transform fade_in:
     alpha 0.0
     linear 0.3 alpha 1.0
