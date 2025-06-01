@@ -1,4 +1,4 @@
-﻿################################################################################
+################################################################################
 ## Инициализация
 ################################################################################
 
@@ -1418,23 +1418,34 @@ style pref_vbox:
 ## использующей меньше кнопок, но больших по размеру, чтобы их было легче
 ## касаться.
 screen quick_menu():
-    variant "touch"
+    hbox:
+        style_prefix "quick"
 
-    zorder 100
+        textbutton "Back" action Rollback()
+        textbutton "Save" action ShowMenu("save")
+        textbutton "Load" action ShowMenu("load")
+        textbutton "Skip" action Skip()
+        textbutton "Auto" action Preference("auto-forward", "toggle")
+        textbutton "Prefs" action ShowMenu("preferences")
 
-    if quick_menu:
 
-        hbox:
-            style_prefix "quick"
+screen custom_save_menu():
+    frame:
+        xalign 0.5
+        yalign 0.5
+        padding 20
 
-            xalign 0.5
-            yalign 1.0
+        vbox:
+            spacing 15
 
-            textbutton _("Назад") action Rollback()
-            textbutton _("Пропуск") action Skip() alternate Skip(fast=True, confirm=True)
-            textbutton _("Авто") action Preference("auto-forward", "toggle")
-            textbutton _("Меню") action ShowMenu()
+            textbutton "Сохранить отдельно":
+                action Function(renpy.save, "custom/myslot")
 
+            textbutton "Загрузить отдельно":
+                action Function(renpy.load, "custom/myslot")
+
+            textbutton "Закрыть":
+                action Hide("custom_save_menu")
 
 style window:
     variant "small"
