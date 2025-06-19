@@ -10,8 +10,49 @@ define j = Character('Jorji', color="#130052ff")
 default score = 0
 default flags = {}
 
-screen esc_button():
-    textbutton "Меню" action Show("esc_menu") xpos 10 ypos 10
+
+init python:
+
+    import json
+    import os
+
+    def get_custom_save_path(slot):
+        return os.path.join(config.savedir, f"mysave_{slot}.json")
+
+    def save_custom(slot=1):
+        renpy.log(f"СОХРАНЕНИЕ: слот {slot}")
+        current_label = renpy.game.context().current
+        if isinstance(current_label, list):
+            current_label = current_label[0]
+        data = {
+            "label": current_label,
+            "variables": {
+                "score": score,
+                "flags": flags,
+            }
+        }
+        with open(get_custom_save_path(slot), "w", encoding="utf-8") as f:
+            json.dump(data, f)
+
+    def load_custom(slot=1):
+        path = get_custom_save_path(slot)
+        renpy.log(f"ЗАГРУЗКА: слот {slot}")
+        if not os.path.exists(path):
+            renpy.notify("Файл не найден.")
+            return
+
+        with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+
+        store.score = data["variables"]["score"]
+        store.flags = data["variables"]["flags"]
+
+        label_to_jump = data["label"]
+        if isinstance(label_to_jump, list):
+            label_to_jump = label_to_jump[0]
+
+        renpy.jump(label_to_jump)
+
 
 define proryanytavtomat = None #вы приняли предложение на концовку
 $ renpy.music.set_volume(0.2)
@@ -85,6 +126,7 @@ label mark_2:
     i"Что я вообщу пишу?"
 scene komn
 play music "audio/budd.mp3" fadein 2.0
+label newst:
 m "Будильник начинает гудеть"
 menu: 
     "Встать и выключить будильник?"
@@ -106,8 +148,12 @@ else:
 window hide
 
 label nest:
-    show screen esc_button
+    scene black
+    show screen show_custom_button
+    "кнопка"
+    return
 
+label prim:
 $ items.extend([("lucky_coin")])
 show screen inventory
 play music "audio/treaty.mp3" fadein 2.0
