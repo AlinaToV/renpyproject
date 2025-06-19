@@ -7,6 +7,9 @@ define i = Character('Вы', color="#d11d1dff")
 define v = Character('Голоса', color="#600606ff")
 define s = Character('Ведущий', color="#33007bff")
 define j = Character('Jorji', color="#130052ff")
+default score = 0
+default flags = {}
+
 screen esc_button():
     textbutton "Меню" action Show("esc_menu") xpos 10 ypos 10
 
