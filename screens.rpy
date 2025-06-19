@@ -1427,6 +1427,20 @@ screen quick_menu():
         textbutton "Skip" action Skip()
         textbutton "Auto" action Preference("auto-forward", "toggle")
         textbutton "Prefs" action ShowMenu("preferences")
+        textbutton "СВОЁ СОХР" action Function(save_custom, 1)
+        textbutton "МОЁ ЗАГР" action ShowMenu("custom_load_screen")
+        
+screen custom_load_screen():
+
+    tag menu
+
+    frame:
+        style "menu_frame"
+        vbox:
+            spacing 10
+            text "Выберите сохранение:"
+            textbutton "Слот 1" action Function(load_custom, 1)
+            textbutton "Назад" action Return()
 
 
 screen custom_save_menu():
