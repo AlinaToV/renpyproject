@@ -100,13 +100,6 @@ else:
     centered"Непонятная сила будто выключает будильник за вас. В комнате отдает запахом дождя."
     stop music fadeout 2.0
 window hide
-
-label nest:
-    scene black
-    show screen show_custom_button
-    "кнопка"
-    return
-
 label prim:
 $ items.extend([("lucky_coin")])
 show screen inventory
